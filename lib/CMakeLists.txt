@@ -14,8 +14,8 @@
    limitations under the License.
 ]]
 
-find_package(ethash CONFIG REQUIRED)
-find_package(intx CONFIG REQUIRED)
+#find_package(ethash CONFIG REQUIRED)
+#find_package(intx CONFIG REQUIRED)
 
 add_library(silkpre
     silkpre/blake2b.c
@@ -33,3 +33,4 @@ add_library(silkpre
 )
 target_include_directories(silkpre PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(silkpre PUBLIC intx::intx secp256k1 PRIVATE ethash::keccak ff gmp)
+set_property(TARGET silkpre PROPERTY CXX_STANDARD 20)
