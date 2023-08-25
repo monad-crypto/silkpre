@@ -17,6 +17,7 @@
 #include "hex.hpp"
 
 #include <cassert>
+#include <stdexcept>
 
 std::string to_hex(const uint8_t* bytes, size_t len) {
     static const char* kHexDigits{"0123456789abcdef"};
