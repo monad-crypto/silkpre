@@ -1,4 +1,9 @@
-.idea
-.vscode
-build*
-cmake-build-*
+/build
+/cmake-build-*
+/.idea
+
+/dist
+/.eggs
+/bindings/python/**/*.egg-info
+/bindings/python/**/*.pyc
+/bindings/python/**/*.so
