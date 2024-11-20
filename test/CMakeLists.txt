@@ -14,8 +14,8 @@
    limitations under the License.
 ]]
 
-find_package(benchmark CONFIG REQUIRED)
-find_package(Catch2 CONFIG REQUIRED)
+# find_package(benchmark CONFIG REQUIRED)
+# find_package(Catch2 CONFIG REQUIRED)
 
 add_executable(unit_test
     unit_test.cpp
@@ -29,5 +29,5 @@ target_link_libraries(unit_test Catch2::Catch2 silkpre)
 add_executable(main main.c)
 target_link_libraries(main silkpre)
 
-add_executable(benchmark benchmark.cpp hex.hpp hex.cpp)
-target_link_libraries(benchmark silkpre benchmark::benchmark)
+add_executable(silkpre_benchmark benchmark.cpp hex.hpp hex.cpp)
+target_link_libraries(silkpre_benchmark silkpre benchmark::benchmark)

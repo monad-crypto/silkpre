@@ -40,6 +40,10 @@ if(NOT SILKPRE_HAS_PARENT)
 endif()
 
 project(silkpre)
+add_subdirectory(third_party/Catch2)
+
+set(BENCHMARK_ENABLE_TESTING OFF)
+add_subdirectory(third_party/benchmark)
 
 # TODO: disable exceptions
 
@@ -90,6 +94,6 @@ add_subdirectory(third_party/libff)
 
 add_subdirectory(lib)
 
-if(SILKPRE_TESTING)
-    add_subdirectory(test)
-endif()
+# if(SILKPRE_TESTING)
+add_subdirectory(test)
+# endif()
