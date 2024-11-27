@@ -160,10 +160,6 @@ static void prof_bn_add(benchmark::State& state) { // precompile 0x06
     for (auto _ : state) {
         SilkpreOutput out{silkpre_bn_add_run(in.data(), in.length())};
         // auto myout = to_hex(out.data, 64);
-// typedef struct SilkpreOutput {
-//     uint8_t* data;  // Has to be freed if not NULL!!!
-//     size_t size;
-// } SilkpreOutput;
         // std::cout << myout << std::endl;
         // exit(1);
         std::free(out.data);
@@ -171,16 +167,16 @@ static void prof_bn_add(benchmark::State& state) { // precompile 0x06
     }
 }
 
+BENCHMARK(prof_bn_mul);
+BENCHMARK(prof_snarkv);
 BENCHMARK(prof_bn_add);
 BENCHMARK(prof_bn_add_2);
 
 // BENCHMARK(prof_blake2_f);
-// BENCHMARK(prof_snarkv);
 // BENCHMARK(prof_ecrec);
 // BENCHMARK(prof_sha256);
 // BENCHMARK(prof_rip160);
 // BENCHMARK(prof_expmod);
-// BENCHMARK(prof_bn_mul);
 
 // precompile 0x0a point evaluation for DENCUN (no support yet)
 
