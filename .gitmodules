@@ -11,6 +11,3 @@
 [submodule "third_party/Catch2"]
 	path = third_party/Catch2
 	url = git@github.com:catchorg/Catch2.git
-[submodule "bn"]
-	path = third_party/bn
-	url = git@github.com:paritytech/bn.git

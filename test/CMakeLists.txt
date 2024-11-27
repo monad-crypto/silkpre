@@ -29,5 +29,15 @@ target_link_libraries(unit_test Catch2::Catch2 silkpre)
 add_executable(main main.c)
 target_link_libraries(main silkpre)
 
+# Specify the name of your library
+add_library(bn_wrapper STATIC IMPORTED)
+
+# Set the location of the header files
+target_include_directories(bn_wrapper INTERFACE "/home/brett/precompiles/monad/third_party/silkpre/third_party/bn_wrapper")
+
+# Set the location of the library file
+set_target_properties(bn_wrapper PROPERTIES IMPORTED_LOCATION "/home/brett/precompiles/monad/third_party/silkpre/third_party/bn_wrapper/target/debug/libbn_wrapper.a")
+
 add_executable(silkpre_benchmark benchmark.cpp hex.hpp hex.cpp)
-target_link_libraries(silkpre_benchmark silkpre benchmark::benchmark)
+target_link_libraries(silkpre_benchmark silkpre benchmark::benchmark bn_wrapper)
+

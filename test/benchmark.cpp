@@ -19,28 +19,11 @@
 #include <silkpre/precompile.h>
 
 #include "hex.hpp"
+#include <iostream>
+#include <string.h>
+#include "bn_wrapper.h"
 
-#define ECREC 1
-#define SHA256 2
-#define RIP160 3// precompile 0x03
-// precompile 0x4 is the identity function
-#define EXPMOD 5
-#define BN_ADD 6
-#define BN_MUL 7
-#define SNARKV 8
-#define BLAKE2_F 9
-
-#define PROF ECREC
-// #define PROF SHA256
-// #define PROF RIP160
-// #define PROF EXPMOD
-// #define PROF BN_ADD
-// #define PROF BN_MUL
-// #define PROF SNARKV
-// #define PROF BLAKE2_F
-
-#if PROF == ECREC // precompile 0x01
-static void prof_ecrec(benchmark::State& state) {
+static void prof_ecrec(benchmark::State& state) { // precompile 0x01
     std::basic_string<uint8_t> in{
         from_hex("18c547e4f7b0f325ad1e56f57e26c745b09a3e503d86e00e5255ff7f715d3d1c0000000000000000000000000000"
                  "00000000000000000000000000000000001c73b1693892219d736caba55bdb67216e485557ea6b6af75f37096c9a"
@@ -51,10 +34,7 @@ static void prof_ecrec(benchmark::State& state) {
     }
 }
 
-BENCHMARK(prof_ecrec);
-
-#elif PROF == SHA256 // precompile 0x02
-static void prof_sha256(benchmark::State& state) {
+static void prof_sha256(benchmark::State& state) { // precompile 0x02
     std::basic_string<uint8_t> in{
         from_hex("38d18acb67d25c8bb9942764b62f18e17054f66a817bd4295423adf9ed98873e0000000000000000000000000000"
                  "00000000000000000000000000000000001b38d18acb67d25c8bb9942764b62f18e17054f66a817bd4295423adf9"
@@ -67,10 +47,7 @@ static void prof_sha256(benchmark::State& state) {
     }
 }
 
-BENCHMARK(prof_sha256);
-
-#elif PROF == RIP160 // precompile 0x03
-static void prof_rip160(benchmark::State& state) {
+static void prof_rip160(benchmark::State& state) { // precompile 0x03
     std::basic_string<uint8_t> in{
         from_hex("38d18acb67d25c8bb9942764b62f18e17054f66a817bd4295423adf9ed98873e0000000000000000000000000000"
                  "00000000000000000000000000000000001b38d18acb67d25c8bb9942764b62f18e17054f66a817bd4295423adf9"
@@ -83,12 +60,9 @@ static void prof_rip160(benchmark::State& state) {
     }
 }
 
-BENCHMARK(prof_rip160);
-
 // precompile 0x4 is the identity function
 
-#elif PROF == EXPMOD // precompile 0x05
-static void prof_expmod(benchmark::State& state) {
+static void prof_expmod(benchmark::State& state) { // precompile 0x05
     std::basic_string<uint8_t> in{
         from_hex("0000000000000000000000000000000000000000000000000000000000000001"
                  "0000000000000000000000000000000000000000000000000000000000000020"
@@ -103,29 +77,7 @@ static void prof_expmod(benchmark::State& state) {
     }
 }
 
-BENCHMARK(prof_expmod);
-
-// #define PROF_BN_ADD
-
-#elif PROF == BN_ADD // precompile 0x06
-static void prof_bn_add(benchmark::State& state) {
-    std::basic_string<uint8_t> in{
-        from_hex("00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000"
-                 "00000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000"
-                 "000000010000000000000000000000000000000000000000000000000000000000000002")};
-    for (auto _ : state) {
-        SilkpreOutput out{silkpre_bn_add_run(in.data(), in.length())};
-        std::free(out.data);
-
-    }
-}
-
-BENCHMARK(prof_bn_add);
-
-// #define PROF_BN_MUL
-
-#elif PROF == BN_MUL // precompile 0x07
-static void prof_bn_mul(benchmark::State& state) {
+static void prof_bn_mul(benchmark::State& state) { // precompile 0x07
     std::basic_string<uint8_t> in{
         from_hex("1a87b0584ce92f4593d161480614f2989035225609f08058ccfa3d0f940febe31a2f3c951f6dadcc7ee"
                  "9007dff81504b0fcd6d7cf59996efdc33d92bf7f9f8f600000000000000000000000000000000000000"
@@ -137,10 +89,7 @@ static void prof_bn_mul(benchmark::State& state) {
     }
 }
 
-BENCHMARK(prof_bn_mul);
-
-#elif PROF == SNARKV // precompile 0x08
-static void prof_snarkv(benchmark::State& state) {
+static void prof_snarkv(benchmark::State& state) { // precompile 0x08
     std::basic_string<uint8_t> in{
         from_hex(
         "0f25929bcb43d5a57391564615c9e70a992b10eafa4db109709649cf48c50dd216da2f5cb6be7a0aa72c440c53c9"
@@ -159,10 +108,7 @@ static void prof_snarkv(benchmark::State& state) {
     }
 }
 
-BENCHMARK(prof_snarkv);
-
-#elif PROF == BLAKE2_F // precompile 0x09
-static void prof_blake2_f(benchmark::State& state) {
+static void prof_blake2_f(benchmark::State& state) { // precompile 0x09
     std::basic_string<uint8_t> in{
     from_hex(
         "0000000048c9bdf267e6096a3ba7ca8485ae67bb2bf894fe72f36e3cf1361d5f3af54fa5d182e6ad7f520e511f6c"
@@ -177,8 +123,64 @@ static void prof_blake2_f(benchmark::State& state) {
     }
 }
 
-BENCHMARK(prof_blake2_f);
-#endif
+static void prof_bn_add_2(benchmark::State& state) {
+    std::basic_string<uint8_t> in{
+        from_hex("00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000"
+                 "00000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000"
+                 "000000010000000000000000000000000000000000000000000000000000000000000002")};
+    uint8_t outp[64];
+    // memset(outp,0,64);
+    // auto s = to_hex(outp, 64);
+    // std::cout << s << std::endl;
+    for (auto _ : state) {
+        // SilkpreOutput out{silkpre_bn_add_run(in.data(), in.length())};
+auto result = bn_add_run(in.data(), outp);
+        // std::cout << result << std::endl;
+        // std::free(out.data);
+//         auto s = to_hex(outp, 64);
+//         std::cout << s << std::endl;
+//
+//         auto r = s ==
+//           "030644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd315ed738c0e0a7c92e7845f96b2"
+//           "ae9c0a68a6a449e3538fc7ff3ebf7a5a18a2c4";
+//         if (r)
+//     {
+//             exit(42);
+//         } else {
+//             exit(12);
+//         }
+    }
+}
+
+static void prof_bn_add(benchmark::State& state) { // precompile 0x06
+    std::basic_string<uint8_t> in{
+        from_hex("00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000"
+                 "00000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000"
+                 "000000010000000000000000000000000000000000000000000000000000000000000002")};
+    for (auto _ : state) {
+        SilkpreOutput out{silkpre_bn_add_run(in.data(), in.length())};
+        // auto myout = to_hex(out.data, 64);
+// typedef struct SilkpreOutput {
+//     uint8_t* data;  // Has to be freed if not NULL!!!
+//     size_t size;
+// } SilkpreOutput;
+        // std::cout << myout << std::endl;
+        // exit(1);
+        std::free(out.data);
+
+    }
+}
+
+BENCHMARK(prof_bn_add);
+BENCHMARK(prof_bn_add_2);
+
+// BENCHMARK(prof_blake2_f);
+// BENCHMARK(prof_snarkv);
+// BENCHMARK(prof_ecrec);
+// BENCHMARK(prof_sha256);
+// BENCHMARK(prof_rip160);
+// BENCHMARK(prof_expmod);
+// BENCHMARK(prof_bn_mul);
 
 // precompile 0x0a point evaluation for DENCUN (no support yet)
 

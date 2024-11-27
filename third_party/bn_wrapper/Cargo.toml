@@ -1,0 +1,11 @@
+[package]
+name = "bn_wrapper"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bn = { package = "substrate-bn", version = "0.6", default-features = false }
+
+[lib]
+crate-type = ["staticlib"]
+
