@@ -4,7 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-bn = { package = "substrate-bn", version = "0.6", default-features = false }
+# bn = { package = "substrate-bn", version = "0.6", default-features = false }
+bn = { package = "substrate-bn", version = "0.6", default-features = false, git = "https://github.com/sp1-patches/bn.git" }
+# ethnum = { version = "1", features = ["eio", "rlp"] }
+# ethnum = { version = "1" }
+# bytes = { version = "1", features = ["serde"] }
 
 [lib]
 crate-type = ["staticlib"]

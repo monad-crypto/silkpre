@@ -33,7 +33,7 @@ target_link_libraries(main silkpre)
 add_library(bn_wrapper STATIC IMPORTED)
 
 find_path(BN_WRAPPER_INCLUDE_DIR NAMES bn_wrapper.h PATHS ../third_party/bn_wrapper)
-find_library(BN_WRAPPER_LIB NAMES libbn_wrapper.a HINTS ../third_party/bn_wrapper/target/debug)
+find_library(BN_WRAPPER_LIB NAMES libbn_wrapper.a HINTS ../third_party/bn_wrapper/target/release)
 
 # Set the location of the header files
 target_include_directories(bn_wrapper INTERFACE ${BN_WRAPPER_INCLUDE_DIR})
