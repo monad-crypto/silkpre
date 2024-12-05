@@ -393,12 +393,7 @@ uint64_t silkpre_bn_mul_gas(const uint8_t*, size_t, int rev) { return rev >= EVM
 
 static uint32_t use_silkpre = 0;
 
-SilkpreOutput silkpre_bn_mul_run(const uint8_t* ptr, size_t len) {
-    std::basic_string<uint8_t> input(ptr, len); // BAL: eliminate this?
-    right_pad(input, 96); // BAL: eliminate this?
-
-    if (use_silkpre)
-    {
+SilkpreOutput silkpre_bn_mul_impl(const std::basic_string<uint8_t> input) {
     init_libff();
 
     std::optional<libff::alt_bn128_G1> x{decode_g1_element(input.data())};
@@ -411,12 +406,18 @@ SilkpreOutput silkpre_bn_mul_run(const uint8_t* ptr, size_t len) {
     libff::alt_bn128_G1 product{n * *x};
     const std::basic_string<uint8_t> res{encode_g1_element(product)};
 
+        if (res.length() != 64) {
+            std::cout << "bad length" << std::endl;
+            std::cout << res.length() << std::endl;
+            exit(12);
+        }
+
     uint8_t* out{static_cast<uint8_t*>(std::malloc(res.length()))};
     std::memcpy(out, res.data(), res.length());
     return {out, res.length()};
-    } else {
+}
 
-    // BAL: can we eliminate malloc?
+SilkpreOutput bn_mul_impl(const std::basic_string<uint8_t> input) {
     uint8_t* out{static_cast<uint8_t*>(std::malloc(64))};
 
     auto retval = bn_mul_run(input.data(), out);
@@ -424,11 +425,20 @@ SilkpreOutput silkpre_bn_mul_run(const uint8_t* ptr, size_t len) {
     {
         return {out, 64};
     }
-
     std::free(out);
     return {nullptr, 0};
-    }
+}
 
+SilkpreOutput silkpre_bn_mul_run(const uint8_t* ptr, size_t len) {
+    std::basic_string<uint8_t> input(ptr, len); // BAL: eliminate this?
+    right_pad(input, 96); // BAL: eliminate this?
+
+    if (use_silkpre)
+    {
+        return silkpre_bn_mul_impl(input);
+    } else {
+        return bn_mul_impl(input);
+    }
 }
 
 static constexpr size_t kSnarkvStride{192};

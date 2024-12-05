@@ -33,7 +33,10 @@ fn parse_bn_point(r: &mut impl Read) -> Option<G1> {
                 {
                     let out = std::slice::from_raw_parts_mut(outp, 64);
                     match AffineG1::from_jacobian(p * fr) {
-                        None => 3,
+                        None => {
+                        out.fill(0);
+                        0
+                    }
                         Some(mul) => {
                                     mul.x().to_big_endian(&mut out[..32]).unwrap();
                                     mul.y().to_big_endian(&mut out[32..]).unwrap();
