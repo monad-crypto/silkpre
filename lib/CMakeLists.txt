@@ -32,5 +32,19 @@ add_library(silkpre
     silkpre/sha256.h
 )
 target_include_directories(silkpre PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(silkpre PUBLIC intx::intx secp256k1 PRIVATE ethash::keccak ff gmp)
+
+# Specify the name of your library
+add_library(bn_wrapper STATIC IMPORTED)
+
+find_path(BN_WRAPPER_INCLUDE_DIR NAMES bn_wrapper.h PATHS ../third_party/bn_wrapper)
+find_library(BN_WRAPPER_LIB NAMES libbn_wrapper.a HINTS ../third_party/bn_wrapper/target/release)
+
+# Set the location of the header files
+target_include_directories(bn_wrapper INTERFACE ${BN_WRAPPER_INCLUDE_DIR})
+
+# Set the location of the library file
+set_target_properties(bn_wrapper PROPERTIES IMPORTED_LOCATION ${BN_WRAPPER_LIB})
+
+target_link_libraries(silkpre PUBLIC intx::intx secp256k1 PRIVATE ethash::keccak ff gmp bn_wrapper)
+
 set_property(TARGET silkpre PROPERTY CXX_STANDARD 20)

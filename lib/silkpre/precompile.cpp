@@ -33,6 +33,7 @@
 #include <silkpre/rmd160.h>
 #include <silkpre/secp256k1n.hpp>
 #include <silkpre/sha256.h>
+#include <../third_party/bn_wrapper/bn_wrapper.h>
 
 enum {
     EVMC_ISTANBUL = 7,
@@ -390,10 +391,14 @@ SilkpreOutput silkpre_bn_add_run(const uint8_t* ptr, size_t len) {
 
 uint64_t silkpre_bn_mul_gas(const uint8_t*, size_t, int rev) { return rev >= EVMC_ISTANBUL ? 6'000 : 40'000; }
 
-SilkpreOutput silkpre_bn_mul_run(const uint8_t* ptr, size_t len) {
-    std::basic_string<uint8_t> input(ptr, len);
-    right_pad(input, 96);
+static uint32_t use_silkpre = 0;
 
+SilkpreOutput silkpre_bn_mul_run(const uint8_t* ptr, size_t len) {
+    std::basic_string<uint8_t> input(ptr, len); // BAL: eliminate this?
+    right_pad(input, 96); // BAL: eliminate this?
+
+    if (use_silkpre)
+    {
     init_libff();
 
     std::optional<libff::alt_bn128_G1> x{decode_g1_element(input.data())};
@@ -409,6 +414,21 @@ SilkpreOutput silkpre_bn_mul_run(const uint8_t* ptr, size_t len) {
     uint8_t* out{static_cast<uint8_t*>(std::malloc(res.length()))};
     std::memcpy(out, res.data(), res.length());
     return {out, res.length()};
+    } else {
+
+    // BAL: can we eliminate malloc?
+    uint8_t* out{static_cast<uint8_t*>(std::malloc(64))};
+
+    auto retval = bn_mul_run(input.data(), out);
+    if (retval == 0)
+    {
+        return {out, 64};
+    }
+
+    std::free(out);
+    return {nullptr, 0};
+    }
+
 }
 
 static constexpr size_t kSnarkvStride{192};
