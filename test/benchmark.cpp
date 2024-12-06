@@ -169,7 +169,7 @@ static void prof_bn_snarkv_2_err(benchmark::State& state) { // precompile 0x08
     uint8_t outp[32];
     auto result = 12;
     for (auto _ : state) {
-result = bn_snarkv_run(in.data());
+result = bn_snarkv_run(in.data(), in.length());
         memset(outp,0,32);
         if (result == 2) { outp[31] = 0; } else { exit(134); }
     }
@@ -206,7 +206,7 @@ static void prof_bn_snarkv_2(benchmark::State& state) { // precompile 0x08
     uint8_t outp[32];
     auto result = 12;
     for (auto _ : state) {
-result = bn_snarkv_run(in.data());
+result = bn_snarkv_run(in.data(), in.length());
         memset(outp,0,32);
         if (result == 1) { outp[31] = 1; } else { exit(134); }
     }

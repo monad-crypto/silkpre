@@ -62,7 +62,10 @@ fn parse_bn_point(r: &mut impl Read) -> Option<G1> {
                 {
                     let out = std::slice::from_raw_parts_mut(outp, 64);
                     match AffineG1::from_jacobian(a + b) {
-                        None => 3,
+                        None => {
+                            out.fill(0);
+                            0
+                        },
                         Some(sum) => {
                                     sum.x().to_big_endian(&mut out[..32]).unwrap();
                                     sum.y().to_big_endian(&mut out[32..]).unwrap();
@@ -77,12 +80,12 @@ fn parse_bn_point(r: &mut impl Read) -> Option<G1> {
 }
 pub const SNARKV_STRIDE: usize = 64 + 128;
 
-fn opt_bn_snarkv_run(inp: *const u8) -> Option<u32> {
+fn opt_bn_snarkv_run(inp: *const u8, len:usize) -> Option<u32> {
 
     unsafe {
-        let inp = std::slice::from_raw_parts(inp, 384);
+        let inp = std::slice::from_raw_parts(inp, len);
         let input = inp;
-    let k = 384 / usize::from(SNARKV_STRIDE);
+    let k = len / usize::from(SNARKV_STRIDE);
         let mut mul = Gt::one();
         for i in 0..k {
             let a_x = Fq::from_slice(&input[i * 192..i * 192 + 32]).ok()?;
@@ -111,8 +114,8 @@ fn opt_bn_snarkv_run(inp: *const u8) -> Option<u32> {
 }
 
 // #[unsafe(no_mangle)] pub extern "C" fn bn_snarkv_run(inp: *const u8, outp: *mut u8) -> u32 {
-#[unsafe(no_mangle)] pub extern "C" fn bn_snarkv_run(inp: *const u8) -> u32 {
-    match opt_bn_snarkv_run(inp) {
+#[unsafe(no_mangle)] pub extern "C" fn bn_snarkv_run(inp: *const u8, len:usize) -> u32 {
+    match opt_bn_snarkv_run(inp,len) {
         None => 2,
         Some(x) => x
 //     {
