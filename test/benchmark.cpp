@@ -150,9 +150,6 @@ static void prof_bn_snarkv_err(benchmark::State& state) { // precompile 0x08
     for (auto _ : state) {
         SilkpreOutput out{silkpre_snarkv_run(in.data(), in.length())};
 
-        // auto s = to_hex(out.data, 32);
-        // std::cout << s << std::endl;
-        // exit(12);
         std::free(out.data);
 
     }
@@ -169,12 +166,10 @@ static void prof_bn_snarkv_2_err(benchmark::State& state) { // precompile 0x08
     uint8_t outp[32];
     auto result = 12;
     for (auto _ : state) {
-result = bn_snarkv_run(in.data(), in.length());
+        result = bn_snarkv_run(in.data(), in.length());
         memset(outp,0,32);
         if (result == 2) { outp[31] = 0; } else { exit(134); }
     }
-        //  auto s = to_hex(outp, 32);
-        // auto r = s == "0000000000000000000000000000000000000000000000000000000000000001";
         if (result != 2)
     {
         std::cout << result << std::endl;
@@ -278,14 +273,14 @@ static void prof_bn_add(benchmark::State& state) { // precompile 0x06
     }
 }
 
-BENCHMARK(prof_bn_snarkv);
-BENCHMARK(prof_bn_snarkv_2);
-BENCHMARK(prof_bn_snarkv_err);
-BENCHMARK(prof_bn_snarkv_2_err);
 BENCHMARK(prof_bn_mul);
 BENCHMARK(prof_bn_mul_2);
 BENCHMARK(prof_bn_add);
 BENCHMARK(prof_bn_add_2);
+BENCHMARK(prof_bn_snarkv);
+BENCHMARK(prof_bn_snarkv_2);
+BENCHMARK(prof_bn_snarkv_err);
+BENCHMARK(prof_bn_snarkv_2_err);
 
 // BENCHMARK(prof_blake2_f);
 // BENCHMARK(prof_ecrec);

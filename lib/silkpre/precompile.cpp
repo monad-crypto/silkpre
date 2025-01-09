@@ -388,7 +388,7 @@ SilkpreOutput silkpre_bn_add_impl(std::basic_string<uint8_t> input) {
 
 SilkpreOutput bn_add_impl(std::basic_string<uint8_t> input) {
     uint8_t* out{static_cast<uint8_t*>(std::malloc(64))};
-    auto retval = bn_add_run(input.data(), out);
+    auto retval = add_run(input.data(), out);
     if(retval == 0)
     {
         return {out, 64 };
@@ -398,7 +398,8 @@ SilkpreOutput bn_add_impl(std::basic_string<uint8_t> input) {
     return {nullptr, 0};
 }
 
-static uint32_t use_silkpre = 0;
+static uint32_t use_silkpre =
+ 0;
 
 SilkpreOutput silkpre_bn_add_run(const uint8_t* ptr, size_t len) {
     std::basic_string<uint8_t> input(ptr, len);
@@ -435,7 +436,7 @@ SilkpreOutput silkpre_bn_mul_impl(const std::basic_string<uint8_t> input) {
 SilkpreOutput bn_mul_impl(const std::basic_string<uint8_t> input) {
     uint8_t* out{static_cast<uint8_t*>(std::malloc(64))};
 
-    auto retval = bn_mul_run(input.data(), out);
+    auto retval = mul_run(input.data(), out);
     if (retval == 0)
     {
         return {out, 64};
@@ -498,7 +499,7 @@ SilkpreOutput silkpre_snarkv_impl(const uint8_t* input, size_t len) {
 }
 
 SilkpreOutput bn_snarkv_impl(const uint8_t* input, size_t len) {
-    auto retval = bn_snarkv_run(input, len);
+    auto retval = batch_snarkv_run(input, len);
     if (retval == 2)
     {
              return {nullptr, 0};
@@ -513,7 +514,6 @@ SilkpreOutput silkpre_snarkv_run(const uint8_t* input, size_t len) {
     if (len % kSnarkvStride != 0) {
         return {nullptr, 0};
     }
-
     if (use_silkpre)
     {
         return silkpre_snarkv_impl(input, len);

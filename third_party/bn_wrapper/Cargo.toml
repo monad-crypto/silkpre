@@ -4,27 +4,16 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-#bn = { package = "substrate-bn", version = "0.6", default-features = false }
 bn = { package = "substrate-bn", version = "0.6", default-features = false, git = "https://github.com/m-kus/substrate-bn-sp1.git" }
-# ethnum = { version = "1", features = ["eio", "rlp"] }
-# ethnum = { version = "1" }
-# bytes = { version = "1", features = ["serde"] }
-
-ark-ff = "0.5.0"
-ark-ec = "0.5.0"
-ark-serialize = "0.5.0"
-ark-std  = "0.5.0"
-ark-bn254 = "0.5.0"
+ark-ff = { version = "0.5.0" }
+ark-ec = { version = "0.5.0" }
+ark-serialize = {version = "0.5.0"}
+ark-std = {version ="0.5.0" }
+ark-bn254 = { version = "0.5.0" }
 hex = "0.4"
 
-#bn254 = { package = "ark-bn254", git = "https://github.com/arkworks-rs/algebra.git", branch = "master"}
-
-#ark-ff = { git = "https://github.com/arkworks-rs/algebra.git", branch = "master" }
-#ark-serialize = { git = "https://github.com/arkworks-rs/algebra.git", branch = "master" }
-#ark-std = { git = "https://github.com/arkworks-rs/algebra.git", branch = "master" }
 
 revm = { git = "https://github.com/bluealloy/revm", branch = "main" }
-tbn = "0.4.4"
 
 [lib]
 crate-type = ["staticlib"]
